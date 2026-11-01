@@ -9,10 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 
-/**
- * Placeholder panel for making room reservations, tracking booking statuses,
- * looking up bookings by ID or guest name, and canceling eligible bookings.
- */
+
 public class ReservationPanel extends JPanel {
 
     public ReservationPanel() {

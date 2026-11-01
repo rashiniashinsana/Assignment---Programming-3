@@ -9,11 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 
-/**
- * Placeholder panel for generating and viewing detailed reservation invoices,
- * including room charges, extra guest fees, discounts, taxes, advance deductions,
- * and final payable amounts.
- */
+
 public class InvoicePanel extends JPanel {
 
     public InvoicePanel() {

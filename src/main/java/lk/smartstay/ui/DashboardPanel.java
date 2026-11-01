@@ -11,10 +11,10 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 
-/**
- * Dashboard panel displaying the welcome banner, system summary metrics,
- * and high-level status for the SmartStay Hotel Booking System.
- */
+
+ //Dashboard panel displaying the welcome banner, system summary metrics,
+ //and high-level status for the SmartStay Hotel Booking System.
+
 public class DashboardPanel extends JPanel {
 
     public DashboardPanel() {
@@ -26,10 +26,9 @@ public class DashboardPanel extends JPanel {
         setBackground(UIConstants.COLOR_BACKGROUND);
         setBorder(BorderFactory.createEmptyBorder(25, 30, 25, 30));
 
-        // Top Section: Welcome Banner
+        
         add(createWelcomeBanner(), BorderLayout.NORTH);
 
-        // Center Section: Summary Cards & Status Info
         JPanel centerContainer = new JPanel();
         centerContainer.setLayout(new BoxLayout(centerContainer, BoxLayout.Y_AXIS));
         centerContainer.setOpaque(false);
@@ -41,9 +40,7 @@ public class DashboardPanel extends JPanel {
         add(centerContainer, BorderLayout.CENTER);
     }
 
-    /**
-     * Builds the welcome banner containing system name and description.
-     */
+
     private JPanel createWelcomeBanner() {
         JPanel banner = new JPanel();
         banner.setLayout(new BoxLayout(banner, BoxLayout.Y_AXIS));
@@ -68,9 +65,7 @@ public class DashboardPanel extends JPanel {
         return banner;
     }
 
-    /**
-     * Builds the 4 summary metric cards showing placeholder counts.
-     */
+
     private JPanel createSummaryCardsPanel() {
         JPanel gridPanel = new JPanel(new GridLayout(1, 4, 18, 0));
         gridPanel.setOpaque(false);
@@ -84,9 +79,7 @@ public class DashboardPanel extends JPanel {
         return gridPanel;
     }
 
-    /**
-     * Helper to create an individual metric card.
-     */
+ 
     private JPanel createMetricCard(String title, String value, String note) {
         JPanel card = new JPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
@@ -117,9 +110,7 @@ public class DashboardPanel extends JPanel {
         return card;
     }
 
-    /**
-     * Builds an informative system overview panel describing the coursework architecture.
-     */
+
     private JPanel createSystemOverviewPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));

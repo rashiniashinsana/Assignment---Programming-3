@@ -9,10 +9,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 
-/**
- * Placeholder panel for administrator room management operations:
- * adding, updating, removing, and toggling room availability.
- */
+ //adding, updating, removing, and toggling room availability.
+
 public class RoomManagementPanel extends JPanel {
 
     public RoomManagementPanel() {

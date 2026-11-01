@@ -9,9 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 
-/**
- * Placeholder panel for registering new hotel guests and managing customer profiles.
- */
+
 public class GuestRegistrationPanel extends JPanel {
 
     public GuestRegistrationPanel() {

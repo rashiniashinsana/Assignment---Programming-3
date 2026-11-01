@@ -4,29 +4,26 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 
-/**
- * Centralized UI constants for the SmartStay Hotel Booking System.
- * Maintains consistent styling, typography, spacing, and color schemes
- * across all Swing panels in the application.
- */
+
+// Maintains consistent styling, typography, spacing, and color schemes
+// across all Swing panels in the application.
+
 public final class UIConstants {
 
     private UIConstants() {
         // Prevent instantiation
     }
-
-    // Color Palette: Neutral light background with a restrained navy accent
-    public static final Color COLOR_PRIMARY = new Color(30, 58, 138);       // Deep Navy Accent (#1E3A8A)
-    public static final Color COLOR_PRIMARY_HOVER = new Color(29, 78, 216); // Slightly lighter navy (#1D4ED8)
-    public static final Color COLOR_SIDEBAR_BG = new Color(30, 41, 59);     // Slate Navy Sidebar (#1E293B)
-    public static final Color COLOR_SIDEBAR_ACTIVE = new Color(51, 65, 85); // Active button background (#334155)
-    public static final Color COLOR_SIDEBAR_HOVER = new Color(71, 85, 105); // Hover button background (#475569)
-    public static final Color COLOR_BACKGROUND = new Color(248, 250, 252);  // Off-white canvas (#F8FAFC)
-    public static final Color COLOR_CARD_BG = Color.WHITE;                  // White card surface
-    public static final Color COLOR_CARD_BORDER = new Color(226, 232, 240); // Subtle border (#E2E8F0)
-    public static final Color COLOR_TEXT_PRIMARY = new Color(15, 23, 42);   // Dark slate text (#0F172A)
-    public static final Color COLOR_TEXT_MUTED = new Color(100, 116, 139);  // Muted slate text (#64748B)
-    public static final Color COLOR_TEXT_LIGHT = new Color(241, 245, 249);  // Sidebar light text (#F1F5F9)
+    public static final Color COLOR_PRIMARY = new Color(30, 58, 138);       
+    public static final Color COLOR_PRIMARY_HOVER = new Color(29, 78, 216); 
+    public static final Color COLOR_SIDEBAR_BG = new Color(30, 41, 59);   
+    public static final Color COLOR_SIDEBAR_ACTIVE = new Color(51, 65, 85); 
+    public static final Color COLOR_SIDEBAR_HOVER = new Color(71, 85, 105); 
+    public static final Color COLOR_BACKGROUND = new Color(248, 250, 252);  
+    public static final Color COLOR_CARD_BG = Color.WHITE;                  
+    public static final Color COLOR_CARD_BORDER = new Color(226, 232, 240); 
+    public static final Color COLOR_TEXT_PRIMARY = new Color(15, 23, 42);   
+    public static final Color COLOR_TEXT_MUTED = new Color(100, 116, 139); 
+    public static final Color COLOR_TEXT_LIGHT = new Color(241, 245, 249); 
 
     // Typography
     public static final String FONT_FAMILY = "Segoe UI";

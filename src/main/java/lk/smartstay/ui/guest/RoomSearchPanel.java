@@ -9,9 +9,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 
-/**
- * Placeholder panel for searching and filtering available rooms by room type and date range.
- */
 public class RoomSearchPanel extends JPanel {
 
     public RoomSearchPanel() {

@@ -24,14 +24,9 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Main application window for the SmartStay Hotel Booking System.
- * Organizes the application using a BorderLayout comprising a top header,
- * a left navigation sidebar, and a central CardLayout content area.
- */
 public class MainFrame extends JFrame {
 
-    // Card identifiers
+
     private static final String CARD_DASHBOARD = "CARD_DASHBOARD";
     private static final String CARD_ROOMS = "CARD_ROOMS";
     private static final String CARD_GUESTS = "CARD_GUESTS";
@@ -39,7 +34,7 @@ public class MainFrame extends JFrame {
     private static final String CARD_RESERVATIONS = "CARD_RESERVATIONS";
     private static final String CARD_INVOICES = "CARD_INVOICES";
 
-    // UI Components
+
     private CardLayout cardLayout;
     private JPanel contentPanel;
     private JLabel headerTitleLabel;
@@ -50,9 +45,7 @@ public class MainFrame extends JFrame {
         initComponents();
     }
 
-    /**
-     * Configures window properties (title, dimensions, centering).
-     */
+
     private void initWindow() {
         setTitle("SmartStay Hotel Booking System");
         setSize(UIConstants.WINDOW_SIZE);
@@ -61,31 +54,22 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    /**
-     * Initializes and arranges main UI components.
-     */
     private void initComponents() {
         setLayout(new BorderLayout());
 
-        // 1. Top Header
         add(createHeaderPanel(), BorderLayout.NORTH);
 
-        // 2. Left Navigation Sidebar
         add(createSidebarPanel(), BorderLayout.WEST);
 
-        // 3. Central Content Area using CardLayout
         add(createContentPanel(), BorderLayout.CENTER);
 
-        // Set default view to Dashboard
         navigateTo(CARD_DASHBOARD, "Dashboard Overview");
         if (!navButtons.isEmpty()) {
             updateActiveButton(navButtons.get(0));
         }
     }
 
-    /**
-     * Creates the top header bar displaying application branding and active context.
-     */
+   
     private JPanel createHeaderPanel() {
         JPanel header = new JPanel(new BorderLayout());
         header.setPreferredSize(UIConstants.HEADER_SIZE);
@@ -109,9 +93,7 @@ public class MainFrame extends JFrame {
         return header;
     }
 
-    /**
-     * Creates the left navigation sidebar containing system module buttons.
-     */
+ 
     private JPanel createSidebarPanel() {
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BorderLayout());
@@ -119,7 +101,6 @@ public class MainFrame extends JFrame {
         sidebar.setBackground(UIConstants.COLOR_SIDEBAR_BG);
         sidebar.setBorder(BorderFactory.createEmptyBorder(20, 12, 20, 12));
 
-        // Sidebar Brand Logo/Title
         JPanel brandPanel = new JPanel();
         brandPanel.setLayout(new BoxLayout(brandPanel, BoxLayout.Y_AXIS));
         brandPanel.setOpaque(false);
@@ -139,7 +120,6 @@ public class MainFrame extends JFrame {
 
         sidebar.add(brandPanel, BorderLayout.NORTH);
 
-        // Navigation Buttons Container
         JPanel navContainer = new JPanel();
         navContainer.setLayout(new BoxLayout(navContainer, BoxLayout.Y_AXIS));
         navContainer.setOpaque(false);
@@ -165,16 +145,12 @@ public class MainFrame extends JFrame {
 
         sidebar.add(navContainer, BorderLayout.CENTER);
 
-        // Bottom Exit Button
         JButton btnExit = createExitButton();
         sidebar.add(btnExit, BorderLayout.SOUTH);
 
         return sidebar;
     }
 
-    /**
-     * Constructs a styled navigation button with active state management.
-     */
     private JButton createNavButton(String text, String cardName, String headerTitle) {
         JButton button = new JButton(text);
         button.setFont(UIConstants.FONT_NAV_BUTTON);
@@ -197,9 +173,6 @@ public class MainFrame extends JFrame {
         return button;
     }
 
-    /**
-     * Constructs the Exit button.
-     */
     private JButton createExitButton() {
         JButton exitButton = new JButton("Exit");
         exitButton.setFont(UIConstants.FONT_NAV_BUTTON);
@@ -217,15 +190,12 @@ public class MainFrame extends JFrame {
         return exitButton;
     }
 
-    /**
-     * Creates the central CardLayout container and registers all application panels.
-     */
+
     private JPanel createContentPanel() {
         cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);
         contentPanel.setBackground(UIConstants.COLOR_BACKGROUND);
 
-        // Register panels
         contentPanel.add(new DashboardPanel(), CARD_DASHBOARD);
         contentPanel.add(new RoomManagementPanel(), CARD_ROOMS);
         contentPanel.add(new GuestRegistrationPanel(), CARD_GUESTS);
@@ -236,9 +206,6 @@ public class MainFrame extends JFrame {
         return contentPanel;
     }
 
-    /**
-     * Switches the active card in the content panel.
-     */
     private void navigateTo(String cardName, String headerTitle) {
         cardLayout.show(contentPanel, cardName);
         if (headerTitleLabel != null) {
@@ -246,9 +213,6 @@ public class MainFrame extends JFrame {
         }
     }
 
-    /**
-     * Updates visual styling of sidebar buttons to reflect current selection.
-     */
     private void updateActiveButton(JButton activeButton) {
         for (JButton btn : navButtons) {
             if (btn == activeButton) {
@@ -266,9 +230,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-    /**
-     * Handles graceful application exit with user confirmation.
-     */
+
     private void handleExit() {
         int choice = JOptionPane.showConfirmDialog(
                 this,
