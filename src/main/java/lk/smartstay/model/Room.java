@@ -1,11 +1,11 @@
 package lk.smartstay.model;
 
+import lk.smartstay.enums.AvailabilityStatus;
 import lk.smartstay.enums.BedType;
 import lk.smartstay.enums.RoomStatus;
 import lk.smartstay.enums.RoomType;
 
 import java.util.Objects;
-
 
 public class Room {
 
@@ -15,28 +15,10 @@ public class Room {
     private int capacity;
     private RoomStatus status;
 
-    /**
-     * Constructs a new Room with an initial availability status of AVAILABLE.
-     *
-     * @param roomId   unique room number or identifier (immutable)
-     * @param roomType category and package tier of the room
-     * @param bedType  bed configuration
-     * @param capacity maximum guest capacity (must be greater than 0)
-     */
     public Room(String roomId, RoomType roomType, BedType bedType, int capacity) {
         this(roomId, roomType, bedType, capacity, RoomStatus.AVAILABLE);
     }
 
-    /**
-     * Constructs a new Room with all required domain attributes.
-     *
-     * @param roomId   unique room number or identifier (immutable)
-     * @param roomType category and package tier of the room
-     * @param bedType  bed configuration
-     * @param capacity maximum guest capacity (must be greater than 0)
-     * @param status   current operational status
-     * @throws IllegalArgumentException if inputs are null or capacity <= 0
-     */
     public Room(String roomId, RoomType roomType, BedType bedType, int capacity, RoomStatus status) {
         if (roomId == null || roomId.trim().isEmpty()) {
             throw new IllegalArgumentException("Room ID cannot be null or empty.");
@@ -59,6 +41,10 @@ public class Room {
         this.bedType = bedType;
         this.capacity = capacity;
         this.status = status;
+    }
+
+    public Room(String roomId, RoomType roomType, BedType bedType, int capacity, AvailabilityStatus availabilityStatus) {
+        this(roomId, roomType, bedType, capacity, availabilityStatus != null ? availabilityStatus.toRoomStatus() : RoomStatus.AVAILABLE);
     }
 
     public String getRoomId() {
@@ -106,11 +92,6 @@ public class Room {
         updateStatus(status);
     }
 
-    /**
-     *  availability status of the room.
-     *
-     * @param newStatus the new status to set
-     */
     public void updateStatus(RoomStatus newStatus) {
         if (newStatus == null) {
             throw new IllegalArgumentException("Room status cannot be null.");
@@ -118,16 +99,19 @@ public class Room {
         this.status = newStatus;
     }
 
-    /**
-     * Checks currently available.
-     *
-     * @return true if status is AVAILABLE, false otherwise
-     */
+    public AvailabilityStatus getAvailabilityStatus() {
+        return AvailabilityStatus.fromRoomStatus(this.status);
+    }
+
+    public void setAvailabilityStatus(AvailabilityStatus availabilityStatus) {
+        if (availabilityStatus != null) {
+            updateStatus(availabilityStatus.toRoomStatus());
+        }
+    }
+
     public boolean isAvailable() {
         return this.status == RoomStatus.AVAILABLE;
     }
-
-    // --- Derived Domain Data  ---
 
     public double getDailyRate() {
         return roomType.getDailyRate();

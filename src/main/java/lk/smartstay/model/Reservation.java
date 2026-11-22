@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
-
 public class Reservation {
 
     public static final double DEFAULT_BOOKING_ADVANCE = 10000.0;
@@ -27,18 +26,6 @@ public class Reservation {
                 DEFAULT_BOOKING_ADVANCE, ReservationStatus.CONFIRMED);
     }
 
-    /**
-     * Constructs a Reservation with full explicit parameters.
-     *
-     * @param bookingId      unique reservation identifier
-     * @param guest          registered guest making the reservation
-     * @param room           assigned hotel room
-     * @param numberOfGuests number of guests occupying the room
-     * @param checkInDate    arrival date
-     * @param checkOutDate   departure date (must be after checkInDate)
-     * @param bookingAdvance paid advance deposit in LKR
-     * @param status         current status of the reservation
-     */
     public Reservation(String bookingId, Guest guest, Room room, int numberOfGuests,
                        LocalDate checkInDate, LocalDate checkOutDate,
                        double bookingAdvance, ReservationStatus status) {
@@ -77,24 +64,14 @@ public class Reservation {
         this.status = status;
     }
 
-    /**
-     * @return total number of nights between check-in and check-out
-     */
     public long calculateNumberOfNights() {
         return ChronoUnit.DAYS.between(checkInDate, checkOutDate);
     }
 
-    /**
-     * @return true if the stay is 5 or more nights, false otherwise
-     */
     public boolean qualifiesForLongStayDiscount() {
         return calculateNumberOfNights() >= LONG_STAY_DISCOUNT_THRESHOLD_NIGHTS;
     }
 
-    /**
-     *
-     * @return true if status is CANCELLED, false otherwise
-     */
     public boolean isCancelled() {
         return this.status == ReservationStatus.CANCELLED;
     }

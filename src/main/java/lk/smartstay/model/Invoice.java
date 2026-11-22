@@ -2,7 +2,6 @@ package lk.smartstay.model;
 
 import java.util.Objects;
 
-
 public class Invoice {
 
     private final String invoiceId;
@@ -13,23 +12,19 @@ public class Invoice {
     private final double taxAmount;
     private final double bookingAdvanceDeduction;
     private final double finalPayableAmount;
+    private final double unusedAdvanceCredit;
 
-    /**
-     * Constructs an itemized Invoice associated with a specific Reservation.
-     *
-     * @param invoiceId               unique invoice reference number
-     * @param reservation             the associated reservation entity
-     * @param baseRoomCharge          calculated total base charge for the room stay
-     * @param extraGuestCharge        surcharge for guests exceeding standard room capacity
-     * @param discountAmount          deducted discount (e.g. 12% for stays >= 5 nights)
-     * @param taxAmount               applicable government tax according to RoomType
-     * @param bookingAdvanceDeduction upfront deposit deduction (normally LKR 10,000)
-     * @param finalPayableAmount      net balance payable by the guest
-     * @throws IllegalArgumentException if mandatory fields are null or invalid
-     */
     public Invoice(String invoiceId, Reservation reservation, double baseRoomCharge,
                    double extraGuestCharge, double discountAmount, double taxAmount,
                    double bookingAdvanceDeduction, double finalPayableAmount) {
+        this(invoiceId, reservation, baseRoomCharge, extraGuestCharge, discountAmount, taxAmount,
+                bookingAdvanceDeduction, finalPayableAmount, 0.0);
+    }
+
+    public Invoice(String invoiceId, Reservation reservation, double baseRoomCharge,
+                   double extraGuestCharge, double discountAmount, double taxAmount,
+                   double bookingAdvanceDeduction, double finalPayableAmount,
+                   double unusedAdvanceCredit) {
         if (invoiceId == null || invoiceId.trim().isEmpty()) {
             throw new IllegalArgumentException("Invoice ID cannot be null or empty.");
         }
@@ -37,7 +32,7 @@ public class Invoice {
             throw new IllegalArgumentException("Reservation cannot be null.");
         }
         if (baseRoomCharge < 0 || extraGuestCharge < 0 || discountAmount < 0 || taxAmount < 0
-                || bookingAdvanceDeduction < 0 || finalPayableAmount < 0) {
+                || bookingAdvanceDeduction < 0 || finalPayableAmount < 0 || unusedAdvanceCredit < 0) {
             throw new IllegalArgumentException("Invoice monetary amounts cannot be negative.");
         }
 
@@ -49,6 +44,7 @@ public class Invoice {
         this.taxAmount = taxAmount;
         this.bookingAdvanceDeduction = bookingAdvanceDeduction;
         this.finalPayableAmount = finalPayableAmount;
+        this.unusedAdvanceCredit = unusedAdvanceCredit;
     }
 
     public String getInvoiceId() {
@@ -81,6 +77,22 @@ public class Invoice {
 
     public double getFinalPayableAmount() {
         return finalPayableAmount;
+    }
+
+    public double getUnusedAdvanceCredit() {
+        return unusedAdvanceCredit;
+    }
+
+    public boolean hasUnusedAdvanceCredit() {
+        return unusedAdvanceCredit > 0.001;
+    }
+
+    public double getTaxableSubtotal() {
+        return Math.max(0.0, baseRoomCharge + extraGuestCharge - discountAmount);
+    }
+
+    public double getBillTotal() {
+        return getTaxableSubtotal() + taxAmount;
     }
 
     @Override

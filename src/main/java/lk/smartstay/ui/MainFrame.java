@@ -1,5 +1,12 @@
 package lk.smartstay.ui;
 
+import lk.smartstay.repository.GuestRepository;
+import lk.smartstay.repository.ReservationRepository;
+import lk.smartstay.repository.RoomRepository;
+import lk.smartstay.service.GuestService;
+import lk.smartstay.service.InvoiceService;
+import lk.smartstay.service.ReservationService;
+import lk.smartstay.service.RoomService;
 import lk.smartstay.ui.admin.RoomManagementPanel;
 import lk.smartstay.ui.guest.GuestRegistrationPanel;
 import lk.smartstay.ui.guest.InvoicePanel;
@@ -26,7 +33,6 @@ import java.util.List;
 
 public class MainFrame extends JFrame {
 
-
     private static final String CARD_DASHBOARD = "CARD_DASHBOARD";
     private static final String CARD_ROOMS = "CARD_ROOMS";
     private static final String CARD_GUESTS = "CARD_GUESTS";
@@ -34,17 +40,38 @@ public class MainFrame extends JFrame {
     private static final String CARD_RESERVATIONS = "CARD_RESERVATIONS";
     private static final String CARD_INVOICES = "CARD_INVOICES";
 
-
     private CardLayout cardLayout;
     private JPanel contentPanel;
     private JLabel headerTitleLabel;
     private final List<JButton> navButtons = new ArrayList<>();
+    private JButton btnExit;
+
+    private final RoomRepository roomRepository;
+    private final GuestRepository guestRepository;
+    private final ReservationRepository reservationRepository;
+    private final RoomService roomService;
+    private final GuestService guestService;
+    private final ReservationService reservationService;
+    private final InvoiceService invoiceService;
+
+    private DashboardPanel dashboardPanel;
+    private RoomManagementPanel roomManagementPanel;
+    private GuestRegistrationPanel guestRegistrationPanel;
+    private RoomSearchPanel roomSearchPanel;
+    private ReservationPanel reservationPanel;
+    private InvoicePanel invoicePanel;
 
     public MainFrame() {
+        this.roomRepository = new RoomRepository();
+        this.guestRepository = new GuestRepository();
+        this.reservationRepository = new ReservationRepository();
+        this.roomService = new RoomService(roomRepository, reservationRepository);
+        this.guestService = new GuestService(guestRepository);
+        this.reservationService = new ReservationService(roomRepository, reservationRepository, guestRepository);
+        this.invoiceService = new InvoiceService(reservationRepository);
         initWindow();
         initComponents();
     }
-
 
     private void initWindow() {
         setTitle("SmartStay Hotel Booking System");
@@ -69,7 +96,6 @@ public class MainFrame extends JFrame {
         }
     }
 
-   
     private JPanel createHeaderPanel() {
         JPanel header = new JPanel(new BorderLayout());
         header.setPreferredSize(UIConstants.HEADER_SIZE);
@@ -93,7 +119,6 @@ public class MainFrame extends JFrame {
         return header;
     }
 
- 
     private JPanel createSidebarPanel() {
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BorderLayout());
@@ -128,19 +153,34 @@ public class MainFrame extends JFrame {
         JButton btnRooms = createNavButton("Room Management", CARD_ROOMS, "Room Management");
         JButton btnGuests = createNavButton("Guest Registration", CARD_GUESTS, "Guest Registration");
         JButton btnSearch = createNavButton("Search Rooms", CARD_SEARCH, "Room Search & Availability");
-        JButton btnReservations = createNavButton("Reservations", CARD_RESERVATIONS, "Reservations Management");
+        JButton btnMakeReservation = createNavButtonWithAction("Make Reservation", () -> {
+            navigateTo(CARD_RESERVATIONS, "Make Reservation");
+            if (reservationPanel != null) {
+                reservationPanel.setSelectedTab(0);
+                reservationPanel.populateGuestDropdown();
+            }
+        });
+        JButton btnReservationMgmt = createNavButtonWithAction("Reservation Management", () -> {
+            navigateTo(CARD_RESERVATIONS, "Reservation Management & Search");
+            if (reservationPanel != null) {
+                reservationPanel.setSelectedTab(1);
+                reservationPanel.refreshReservationHistoryTable();
+            }
+        });
         JButton btnInvoices = createNavButton("Invoices", CARD_INVOICES, "Invoices & Billing");
 
         navContainer.add(btnDashboard);
-        navContainer.add(Box.createVerticalStrut(8));
+        navContainer.add(Box.createVerticalStrut(6));
         navContainer.add(btnRooms);
-        navContainer.add(Box.createVerticalStrut(8));
+        navContainer.add(Box.createVerticalStrut(6));
         navContainer.add(btnGuests);
-        navContainer.add(Box.createVerticalStrut(8));
+        navContainer.add(Box.createVerticalStrut(6));
         navContainer.add(btnSearch);
-        navContainer.add(Box.createVerticalStrut(8));
-        navContainer.add(btnReservations);
-        navContainer.add(Box.createVerticalStrut(8));
+        navContainer.add(Box.createVerticalStrut(6));
+        navContainer.add(btnMakeReservation);
+        navContainer.add(Box.createVerticalStrut(6));
+        navContainer.add(btnReservationMgmt);
+        navContainer.add(Box.createVerticalStrut(6));
         navContainer.add(btnInvoices);
 
         sidebar.add(navContainer, BorderLayout.CENTER);
@@ -173,35 +213,64 @@ public class MainFrame extends JFrame {
         return button;
     }
 
-    private JButton createExitButton() {
-        JButton exitButton = new JButton("Exit");
-        exitButton.setFont(UIConstants.FONT_NAV_BUTTON);
-        exitButton.setForeground(UIConstants.COLOR_TEXT_LIGHT);
-        exitButton.setBackground(UIConstants.COLOR_SIDEBAR_BG);
-        exitButton.setFocusPainted(false);
-        exitButton.setBorderPainted(false);
-        exitButton.setHorizontalAlignment(SwingConstants.LEFT);
-        exitButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        exitButton.setPreferredSize(UIConstants.NAV_BUTTON_SIZE);
-        exitButton.setMaximumSize(UIConstants.NAV_BUTTON_SIZE);
-        exitButton.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
+    private JButton createNavButtonWithAction(String text, Runnable action) {
+        JButton button = new JButton(text);
+        button.setFont(UIConstants.FONT_NAV_BUTTON);
+        button.setForeground(UIConstants.COLOR_TEXT_LIGHT);
+        button.setBackground(UIConstants.COLOR_SIDEBAR_BG);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setHorizontalAlignment(SwingConstants.LEFT);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setPreferredSize(UIConstants.NAV_BUTTON_SIZE);
+        button.setMaximumSize(UIConstants.NAV_BUTTON_SIZE);
+        button.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
 
-        exitButton.addActionListener(e -> handleExit());
-        return exitButton;
+        button.addActionListener(e -> {
+            action.run();
+            updateActiveButton(button);
+        });
+
+        navButtons.add(button);
+        return button;
     }
 
+    private JButton createExitButton() {
+        btnExit = new JButton("Exit");
+        btnExit.setFont(UIConstants.FONT_NAV_BUTTON);
+        btnExit.setForeground(UIConstants.COLOR_TEXT_LIGHT);
+        btnExit.setBackground(UIConstants.COLOR_SIDEBAR_BG);
+        btnExit.setFocusPainted(false);
+        btnExit.setBorderPainted(false);
+        btnExit.setHorizontalAlignment(SwingConstants.LEFT);
+        btnExit.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnExit.setPreferredSize(UIConstants.NAV_BUTTON_SIZE);
+        btnExit.setMaximumSize(UIConstants.NAV_BUTTON_SIZE);
+        btnExit.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
+
+        btnExit.addActionListener(e -> handleExit());
+        navButtons.add(btnExit);
+        return btnExit;
+    }
 
     private JPanel createContentPanel() {
         cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);
         contentPanel.setBackground(UIConstants.COLOR_BACKGROUND);
 
-        contentPanel.add(new DashboardPanel(), CARD_DASHBOARD);
-        contentPanel.add(new RoomManagementPanel(), CARD_ROOMS);
-        contentPanel.add(new GuestRegistrationPanel(), CARD_GUESTS);
-        contentPanel.add(new RoomSearchPanel(), CARD_SEARCH);
-        contentPanel.add(new ReservationPanel(), CARD_RESERVATIONS);
-        contentPanel.add(new InvoicePanel(), CARD_INVOICES);
+        dashboardPanel = new DashboardPanel(roomRepository, guestRepository, reservationRepository);
+        roomManagementPanel = new RoomManagementPanel(roomService);
+        guestRegistrationPanel = new GuestRegistrationPanel(guestService);
+        roomSearchPanel = new RoomSearchPanel(reservationService);
+        reservationPanel = new ReservationPanel(reservationService, guestService);
+        invoicePanel = new InvoicePanel(invoiceService, reservationService);
+
+        contentPanel.add(dashboardPanel, CARD_DASHBOARD);
+        contentPanel.add(roomManagementPanel, CARD_ROOMS);
+        contentPanel.add(guestRegistrationPanel, CARD_GUESTS);
+        contentPanel.add(roomSearchPanel, CARD_SEARCH);
+        contentPanel.add(reservationPanel, CARD_RESERVATIONS);
+        contentPanel.add(invoicePanel, CARD_INVOICES);
 
         return contentPanel;
     }
@@ -210,6 +279,19 @@ public class MainFrame extends JFrame {
         cardLayout.show(contentPanel, cardName);
         if (headerTitleLabel != null) {
             headerTitleLabel.setText(headerTitle);
+        }
+
+        if (CARD_DASHBOARD.equals(cardName) && dashboardPanel != null) {
+            dashboardPanel.refreshMetrics();
+        } else if (CARD_ROOMS.equals(cardName) && roomManagementPanel != null) {
+            roomManagementPanel.refreshTableData();
+        } else if (CARD_GUESTS.equals(cardName) && guestRegistrationPanel != null) {
+            guestRegistrationPanel.refreshTableData();
+        } else if (CARD_RESERVATIONS.equals(cardName) && reservationPanel != null) {
+            reservationPanel.populateGuestDropdown();
+            reservationPanel.refreshReservationHistoryTable();
+        } else if (CARD_INVOICES.equals(cardName) && invoicePanel != null) {
+            invoicePanel.populateEligibleBookingsDropdown();
         }
     }
 
@@ -230,15 +312,69 @@ public class MainFrame extends JFrame {
         }
     }
 
+    public InvoiceService getInvoiceService() {
+        return invoiceService;
+    }
+
+    public void navigateToCard(String cardName, String headerTitle) {
+        navigateTo(cardName, headerTitle);
+    }
+
+    public DashboardPanel getDashboardPanel() {
+        return dashboardPanel;
+    }
+
+    public RoomManagementPanel getRoomManagementPanel() {
+        return roomManagementPanel;
+    }
+
+    public GuestRegistrationPanel getGuestRegistrationPanel() {
+        return guestRegistrationPanel;
+    }
+
+    public RoomSearchPanel getRoomSearchPanel() {
+        return roomSearchPanel;
+    }
+
+    public ReservationPanel getReservationPanel() {
+        return reservationPanel;
+    }
+
+    public InvoicePanel getInvoicePanel() {
+        return invoicePanel;
+    }
+
+    public List<JButton> getNavButtons() {
+        return navButtons;
+    }
+
+    public JButton getBtnExit() {
+        return btnExit;
+    }
+
+    public RoomRepository getRoomRepository() {
+        return roomRepository;
+    }
+
+    public GuestRepository getGuestRepository() {
+        return guestRepository;
+    }
+
+    public ReservationRepository getReservationRepository() {
+        return reservationRepository;
+    }
 
     private void handleExit() {
-        int choice = JOptionPane.showConfirmDialog(
-                this,
-                "Are you sure you want to exit the SmartStay Hotel Booking System?",
-                "Exit Confirmation",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE
-        );
+        int choice = JOptionPane.YES_OPTION;
+        if (isShowing()) {
+            choice = JOptionPane.showConfirmDialog(
+                    this,
+                    "Are you sure you want to exit the SmartStay Hotel Booking System?",
+                    "Exit Confirmation",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+            );
+        }
 
         if (choice == JOptionPane.YES_OPTION) {
             dispose();
