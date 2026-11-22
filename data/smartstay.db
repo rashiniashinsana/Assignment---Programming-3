@@ -1,0 +1,16 @@
+# ==============================================================================
+# SMARTSTAY HOTEL BOOKING SYSTEM - RELATIONAL DATABASE STORAGE
+# Auto-generated and synchronized on 2026-11-22T16:48:12.371126400Z
+# ==============================================================================
+
+[SCHEMA:ROOMS]
+# room_id|room_type|bed_type|capacity|status
+001|FAMILY_SUITE|KING|5|AVAILABLE
+
+[SCHEMA:GUESTS]
+# guest_id|nic_or_passport|full_name|contact_number|email
+GST001|200272601014|AVR Ashinsana|0778874455|rashi@gmail.com
+
+[SCHEMA:RESERVATIONS]
+# booking_id|room_id|guest_id|check_in|check_out|num_guests|advance|status
+BKG001|001|GST001|2026-11-24|2026-11-27|5|10000.00|CONFIRMED

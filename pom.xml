@@ -17,6 +17,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.release>17</maven.compiler.release>
+        <exec.mainClass>lk.smartstay.SmartStayApp</exec.mainClass>
     </properties>
 
     <dependencies>
@@ -53,9 +54,24 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>lk.smartstay.SmartStayApp</mainClass>
+                    <mainClass>${exec.mainClass}</mainClass>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>gui</id>
+            <properties>
+                <exec.mainClass>lk.smartstay.Main</exec.mainClass>
+            </properties>
+        </profile>
+        <profile>
+            <id>cli</id>
+            <properties>
+                <exec.mainClass>lk.smartstay.SmartStayApp</exec.mainClass>
+            </properties>
+        </profile>
+    </profiles>
 </project>

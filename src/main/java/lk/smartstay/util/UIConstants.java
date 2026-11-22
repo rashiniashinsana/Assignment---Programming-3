@@ -19,10 +19,6 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-/**
- * Design system tokens and reusable UI styling helpers for the SmartStay Hotel Booking System.
- * Applies a luxury modern hospitality theme (Deep Navy #0F2942, Warm Gold #C59B27, Slate #1E293B, Off-White #F8FAFC).
- */
 public final class UIConstants {
 
     private UIConstants() {
@@ -91,10 +87,7 @@ public final class UIConstants {
 
     // --- Reusable UI Component Builders ---
 
-    /**
-     * Styles any JTable into a modern, readable table:
-     * 32px rows, deep navy header with white bold text, subtle grid lines, and selection highlighting.
-     */
+  
     public static void styleTable(JTable table) {
         table.setFont(FONT_BODY);
         table.setRowHeight(32);
@@ -113,9 +106,7 @@ public final class UIConstants {
         ((DefaultTableCellRenderer) header.getDefaultRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
     }
 
-    /**
-     * Creates an interactive button with smooth hover effects, padding, and hand cursor.
-     */
+ 
     public static JButton createStyledButton(String text, Color bg, Color fg) {
         JButton btn = new JButton(text);
         btn.setFont(FONT_BODY_BOLD);
@@ -146,9 +137,7 @@ public final class UIConstants {
         return btn;
     }
 
-    /**
-     * Returns a TableCellRenderer that renders status strings as handsome rounded badges.
-     */
+ 
     public static DefaultTableCellRenderer createStatusBadgeRenderer() {
         return new DefaultTableCellRenderer() {
             @Override
@@ -189,9 +178,7 @@ public final class UIConstants {
         };
     }
 
-    /**
-     * Returns a TableCellRenderer that right-aligns currency and numeric columns with subtle zebra striping.
-     */
+
     public static DefaultTableCellRenderer createRightAlignRenderer() {
         return new DefaultTableCellRenderer() {
             @Override
@@ -210,9 +197,7 @@ public final class UIConstants {
         };
     }
 
-    /**
-     * Returns a TableCellRenderer that center-aligns IDs, dates, and capacities with zebra striping.
-     */
+
     public static DefaultTableCellRenderer createCenterAlignRenderer() {
         return new DefaultTableCellRenderer() {
             @Override
@@ -230,9 +215,7 @@ public final class UIConstants {
         };
     }
 
-    /**
-     * Returns a TableCellRenderer that left-aligns text with padding and zebra striping.
-     */
+ 
     public static DefaultTableCellRenderer createLeftAlignRenderer() {
         return new DefaultTableCellRenderer() {
             @Override
@@ -251,9 +234,6 @@ public final class UIConstants {
         };
     }
 
-    /**
-     * Color blending helper for hover states.
-     */
     private static Color blendColor(Color c1, Color c2, float ratio) {
         float iRatio = 1.0f - ratio;
         int r = (int) (c1.getRed() * iRatio + c2.getRed() * ratio);
