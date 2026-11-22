@@ -3,6 +3,7 @@ package lk.smartstay.service;
 import lk.smartstay.enums.RoomStatus;
 import lk.smartstay.model.Reservation;
 import lk.smartstay.model.Room;
+import lk.smartstay.repository.DatabaseManager;
 import lk.smartstay.repository.ReservationRepository;
 import lk.smartstay.repository.RoomRepository;
 
@@ -33,7 +34,11 @@ public class RoomService {
         if (roomRepository.existsById(room.getRoomId().trim())) {
             return false;
         }
-        return roomRepository.addRoom(room);
+        boolean ok = roomRepository.addRoom(room);
+        if (ok) {
+            DatabaseManager.getInstance().autoSave();
+        }
+        return ok;
     }
 
     public boolean updateRoom(Room room) {
@@ -43,7 +48,11 @@ public class RoomService {
         if (!roomRepository.existsById(room.getRoomId().trim())) {
             return false;
         }
-        return roomRepository.updateRoom(room);
+        boolean ok = roomRepository.updateRoom(room);
+        if (ok) {
+            DatabaseManager.getInstance().autoSave();
+        }
+        return ok;
     }
 
     public boolean removeRoom(String roomId) {
@@ -57,7 +66,11 @@ public class RoomService {
                 return false;
             }
         }
-        return roomRepository.removeRoom(id);
+        boolean ok = roomRepository.removeRoom(id);
+        if (ok) {
+            DatabaseManager.getInstance().autoSave();
+        }
+        return ok;
     }
 
     public boolean updateRoomStatus(String roomId, RoomStatus status) {
@@ -69,7 +82,11 @@ public class RoomService {
             return false;
         }
         room.updateStatus(status);
-        return roomRepository.updateRoom(room);
+        boolean ok = roomRepository.updateRoom(room);
+        if (ok) {
+            DatabaseManager.getInstance().autoSave();
+        }
+        return ok;
     }
 
     public Room findRoomById(String roomId) {

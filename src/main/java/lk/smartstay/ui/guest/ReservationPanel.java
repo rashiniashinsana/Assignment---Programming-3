@@ -420,7 +420,7 @@ public class ReservationPanel extends JPanel {
         panel.setOpaque(false);
         panel.setBorder(BorderFactory.createEmptyBorder(6, 0, 0, 0));
 
-        JButton btnConfirm = createStyledButton("Confirm Reservation", UIConstants.COLOR_PRIMARY, Color.WHITE);
+        JButton btnConfirm = createStyledButton("Confirm Reservation", UIConstants.COLOR_ACCENT_GOLD, Color.WHITE);
         btnConfirm.setPreferredSize(new Dimension(0, 38));
         JButton btnClear = createStyledButton("Clear Form", new Color(241, 245, 249), UIConstants.COLOR_TEXT_PRIMARY);
 
@@ -521,25 +521,17 @@ public class ReservationPanel extends JPanel {
         };
 
         roomTable = new JTable(tableModel);
-        roomTable.setFont(UIConstants.FONT_BODY);
-        roomTable.setRowHeight(26);
+        UIConstants.styleTable(roomTable);
         roomTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        roomTable.getTableHeader().setFont(UIConstants.FONT_BODY_BOLD);
-        roomTable.getTableHeader().setBackground(new Color(241, 245, 249));
-        roomTable.getTableHeader().setForeground(UIConstants.COLOR_TEXT_PRIMARY);
 
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
-        rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
-
-        roomTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-        roomTable.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
-        roomTable.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
-        roomTable.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
-        roomTable.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
-        roomTable.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
-        roomTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
+        roomTable.getColumnModel().getColumn(0).setCellRenderer(UIConstants.createCenterAlignRenderer());
+        roomTable.getColumnModel().getColumn(1).setCellRenderer(UIConstants.createLeftAlignRenderer());
+        roomTable.getColumnModel().getColumn(2).setCellRenderer(UIConstants.createLeftAlignRenderer());
+        roomTable.getColumnModel().getColumn(3).setCellRenderer(UIConstants.createCenterAlignRenderer());
+        roomTable.getColumnModel().getColumn(4).setCellRenderer(UIConstants.createRightAlignRenderer());
+        roomTable.getColumnModel().getColumn(5).setCellRenderer(UIConstants.createStatusBadgeRenderer());
+        roomTable.getColumnModel().getColumn(6).setCellRenderer(UIConstants.createCenterAlignRenderer());
+        roomTable.getColumnModel().getColumn(7).setCellRenderer(UIConstants.createStatusBadgeRenderer());
 
         roomTable.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -723,26 +715,19 @@ public class ReservationPanel extends JPanel {
         };
 
         reservationTable = new JTable(reservationTableModel);
-        reservationTable.setFont(UIConstants.FONT_BODY);
-        reservationTable.setRowHeight(25);
+        UIConstants.styleTable(reservationTable);
         reservationTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        reservationTable.getTableHeader().setFont(UIConstants.FONT_BODY_BOLD);
-        reservationTable.getTableHeader().setBackground(new Color(241, 245, 249));
-        reservationTable.getTableHeader().setForeground(UIConstants.COLOR_TEXT_PRIMARY);
 
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
-        rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
-
-        reservationTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-        reservationTable.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
-        reservationTable.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
-        reservationTable.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
-        reservationTable.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
-        reservationTable.getColumnModel().getColumn(7).setCellRenderer(centerRenderer);
-        reservationTable.getColumnModel().getColumn(8).setCellRenderer(rightRenderer);
-        reservationTable.getColumnModel().getColumn(9).setCellRenderer(centerRenderer);
+        reservationTable.getColumnModel().getColumn(0).setCellRenderer(UIConstants.createCenterAlignRenderer());
+        reservationTable.getColumnModel().getColumn(1).setCellRenderer(UIConstants.createLeftAlignRenderer());
+        reservationTable.getColumnModel().getColumn(2).setCellRenderer(UIConstants.createCenterAlignRenderer());
+        reservationTable.getColumnModel().getColumn(3).setCellRenderer(UIConstants.createLeftAlignRenderer());
+        reservationTable.getColumnModel().getColumn(4).setCellRenderer(UIConstants.createCenterAlignRenderer());
+        reservationTable.getColumnModel().getColumn(5).setCellRenderer(UIConstants.createCenterAlignRenderer());
+        reservationTable.getColumnModel().getColumn(6).setCellRenderer(UIConstants.createCenterAlignRenderer());
+        reservationTable.getColumnModel().getColumn(7).setCellRenderer(UIConstants.createCenterAlignRenderer());
+        reservationTable.getColumnModel().getColumn(8).setCellRenderer(UIConstants.createRightAlignRenderer());
+        reservationTable.getColumnModel().getColumn(9).setCellRenderer(UIConstants.createStatusBadgeRenderer());
 
         reservationTable.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {

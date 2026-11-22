@@ -297,7 +297,7 @@ public class InvoicePanel extends JPanel {
         JPanel panel = new JPanel(new GridLayout(2, 2, 6, 6));
         panel.setOpaque(false);
 
-        btnGenerateInvoice = createStyledButton("Generate Invoice", UIConstants.COLOR_PRIMARY, Color.WHITE);
+        btnGenerateInvoice = createStyledButton("Generate Invoice", UIConstants.COLOR_ACCENT_GOLD, Color.WHITE);
         btnGenerateInvoice.setEnabled(false);
         btnGenerateInvoice.addActionListener(e -> handleGenerateInvoice());
 

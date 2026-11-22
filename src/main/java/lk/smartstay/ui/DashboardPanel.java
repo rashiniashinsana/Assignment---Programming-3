@@ -118,7 +118,7 @@ public class DashboardPanel extends JPanel {
         gridPanel.setOpaque(false);
         gridPanel.setMaximumSize(new Dimension(Short.MAX_VALUE, 125));
 
-        JPanel cardRooms = createMetricCardBase("Total Rooms");
+        JPanel cardRooms = createMetricCardBase("Total Rooms", UIConstants.COLOR_PRIMARY);
         lblTotalRoomsVal = createMetricValueLabel("0");
         JLabel noteRooms = createMetricNoteLabel("Configured room inventory");
         cardRooms.add(lblTotalRoomsVal);
@@ -126,7 +126,7 @@ public class DashboardPanel extends JPanel {
         cardRooms.add(noteRooms);
         gridPanel.add(cardRooms);
 
-        JPanel cardAvailable = createMetricCardBase("Available Rooms");
+        JPanel cardAvailable = createMetricCardBase("Available Rooms", UIConstants.COLOR_SUCCESS);
         lblAvailableRoomsVal = createMetricValueLabel("0");
         lblAvailableRoomsVal.setForeground(new Color(21, 128, 61));
         JLabel noteAvailable = createMetricNoteLabel("Administrative status only (dates vary)");
@@ -135,7 +135,7 @@ public class DashboardPanel extends JPanel {
         cardAvailable.add(noteAvailable);
         gridPanel.add(cardAvailable);
 
-        JPanel cardGuests = createMetricCardBase("Registered Guests");
+        JPanel cardGuests = createMetricCardBase("Registered Guests", UIConstants.COLOR_ACCENT_GOLD);
         lblGuestsVal = createMetricValueLabel("0");
         JLabel noteGuests = createMetricNoteLabel("Customer database profiles");
         cardGuests.add(lblGuestsVal);
@@ -143,7 +143,7 @@ public class DashboardPanel extends JPanel {
         cardGuests.add(noteGuests);
         gridPanel.add(cardGuests);
 
-        JPanel cardReservations = createMetricCardBase("Total Reservations");
+        JPanel cardReservations = createMetricCardBase("Total Reservations", new Color(79, 70, 229));
         lblReservationsVal = createMetricValueLabel("0");
         lblReservationsNote = createMetricNoteLabel("0 Confirmed · 0 Cancelled");
         cardReservations.add(lblReservationsVal);
@@ -154,13 +154,13 @@ public class DashboardPanel extends JPanel {
         return gridPanel;
     }
 
-    private JPanel createMetricCardBase(String title) {
+    private JPanel createMetricCardBase(String title, Color topAccent) {
         JPanel card = new JPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setBackground(UIConstants.COLOR_CARD_BG);
         card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(UIConstants.COLOR_CARD_BORDER, 1),
-                BorderFactory.createEmptyBorder(14, 16, 14, 16)
+                BorderFactory.createMatteBorder(3, 1, 1, 1, topAccent),
+                BorderFactory.createEmptyBorder(12, 16, 14, 16)
         ));
 
         JLabel titleLabel = new JLabel(title);
@@ -170,6 +170,10 @@ public class DashboardPanel extends JPanel {
         card.add(titleLabel);
         card.add(Box.createVerticalStrut(6));
         return card;
+    }
+
+    private JPanel createMetricCardBase(String title) {
+        return createMetricCardBase(title, UIConstants.COLOR_CARD_BORDER);
     }
 
     private JLabel createMetricValueLabel(String text) {

@@ -7,6 +7,7 @@ import lk.smartstay.model.Guest;
 import lk.smartstay.model.Invoice;
 import lk.smartstay.model.Reservation;
 import lk.smartstay.model.Room;
+import lk.smartstay.repository.DatabaseManager;
 import lk.smartstay.repository.GuestRepository;
 import lk.smartstay.repository.ReservationRepository;
 import lk.smartstay.repository.RoomRepository;
@@ -42,27 +43,11 @@ public class HotelBookingManager {
         this.reservationService = new ReservationService(this.roomRepository, this.reservationRepository,
                 this.guestRepository, clock);
         this.invoiceService = new InvoiceService(this.reservationRepository);
+        DatabaseManager.getInstance().registerRepositories(this.roomRepository, this.guestRepository, this.reservationRepository);
     }
 
     public void initializeDefaultData() {
-        if (roomRepository.count() == 0) {
-            roomRepository.addRoom(new Room("R101", RoomType.STANDARD, BedType.SINGLE, 1, RoomStatus.AVAILABLE));
-            roomRepository.addRoom(new Room("R102", RoomType.STANDARD, BedType.DOUBLE, 2, RoomStatus.AVAILABLE));
-            roomRepository.addRoom(new Room("R201", RoomType.DELUXE, BedType.KING, 2, RoomStatus.AVAILABLE));
-            roomRepository.addRoom(new Room("R202", RoomType.DELUXE, BedType.QUEEN, 2, RoomStatus.AVAILABLE));
-            roomRepository.addRoom(new Room("R301", RoomType.SUITE, BedType.KING, 3, RoomStatus.AVAILABLE));
-            roomRepository.addRoom(new Room("R302", RoomType.SUITE, BedType.QUEEN, 3, RoomStatus.UNDER_MAINTENANCE));
-            roomRepository.addRoom(new Room("R401", RoomType.FAMILY_SUITE, BedType.KING, 4, RoomStatus.AVAILABLE));
-        }
-
-        if (guestRepository.count() == 0) {
-            guestRepository.addGuest(new Guest(IdGenerator.generateGuestId(), "901234567V", "Sunil Fernando",
-                    "0771234567", "sunil@example.com"));
-            guestRepository.addGuest(new Guest(IdGenerator.generateGuestId(), "959876543V", "Nimal Perera",
-                    "0719876543", "nimal@example.com"));
-            guestRepository.addGuest(new Guest(IdGenerator.generateGuestId(), "PA1234567", "Alice Smith",
-                    "+447911123456", "alice@example.com"));
-        }
+        DatabaseManager.getInstance().initializeAndLoad(roomRepository, guestRepository, reservationRepository);
     }
 
     public boolean addRoom(Room room) {

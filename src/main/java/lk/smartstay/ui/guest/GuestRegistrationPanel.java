@@ -174,8 +174,8 @@ public class GuestRegistrationPanel extends JPanel {
         JPanel panel = new JPanel(new GridLayout(2, 2, 8, 8));
         panel.setOpaque(false);
 
-        JButton btnRegister = createStyledButton("Register Guest", UIConstants.COLOR_PRIMARY, Color.WHITE);
-        JButton btnUpdate = createStyledButton("Update Guest", UIConstants.COLOR_SIDEBAR_ACTIVE, Color.WHITE);
+        JButton btnRegister = createStyledButton("Register Guest", UIConstants.COLOR_ACCENT_GOLD, Color.WHITE);
+        JButton btnUpdate = createStyledButton("Update Guest", UIConstants.COLOR_PRIMARY, Color.WHITE);
         JButton btnClear = createStyledButton("Clear Form", new Color(241, 245, 249), UIConstants.COLOR_TEXT_PRIMARY);
         JButton btnRefresh = createStyledButton("Refresh Table", new Color(241, 245, 249), UIConstants.COLOR_TEXT_PRIMARY);
 
@@ -252,17 +252,14 @@ public class GuestRegistrationPanel extends JPanel {
         };
 
         guestTable = new JTable(tableModel);
-        guestTable.setFont(UIConstants.FONT_BODY);
-        guestTable.setRowHeight(26);
+        UIConstants.styleTable(guestTable);
         guestTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        guestTable.getTableHeader().setFont(UIConstants.FONT_BODY_BOLD);
-        guestTable.getTableHeader().setBackground(new Color(241, 245, 249));
-        guestTable.getTableHeader().setForeground(UIConstants.COLOR_TEXT_PRIMARY);
 
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        guestTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-        guestTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+        guestTable.getColumnModel().getColumn(0).setCellRenderer(UIConstants.createCenterAlignRenderer());
+        guestTable.getColumnModel().getColumn(1).setCellRenderer(UIConstants.createCenterAlignRenderer());
+        guestTable.getColumnModel().getColumn(2).setCellRenderer(UIConstants.createLeftAlignRenderer());
+        guestTable.getColumnModel().getColumn(3).setCellRenderer(UIConstants.createCenterAlignRenderer());
+        guestTable.getColumnModel().getColumn(4).setCellRenderer(UIConstants.createLeftAlignRenderer());
 
         guestTable.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {

@@ -1,6 +1,7 @@
 package lk.smartstay.service;
 
 import lk.smartstay.model.Guest;
+import lk.smartstay.repository.DatabaseManager;
 import lk.smartstay.repository.GuestRepository;
 
 import java.util.Collections;
@@ -33,7 +34,11 @@ public class GuestService {
             return false;
         }
 
-        return guestRepository.addGuest(guest);
+        boolean ok = guestRepository.addGuest(guest);
+        if (ok) {
+            DatabaseManager.getInstance().autoSave();
+        }
+        return ok;
     }
 
     public boolean updateGuest(Guest guest) {
@@ -46,7 +51,11 @@ public class GuestService {
             return false;
         }
 
-        return guestRepository.updateGuest(guest);
+        boolean ok = guestRepository.updateGuest(guest);
+        if (ok) {
+            DatabaseManager.getInstance().autoSave();
+        }
+        return ok;
     }
 
     public Guest findGuestById(String guestId) {

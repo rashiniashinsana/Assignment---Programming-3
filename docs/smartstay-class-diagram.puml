@@ -1,0 +1,626 @@
+@startuml smartstay_class_diagram
+
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype ortho
+skinparam defaultFontName "Segoe UI"
+skinparam roundcorner 6
+
+skinparam class {
+    BackgroundColor White
+    BorderColor #1E3A8A
+    ArrowColor #1E3A8A
+    HeaderBackgroundColor #EEF2FF
+}
+
+skinparam enum {
+    BackgroundColor White
+    BorderColor #047857
+    HeaderBackgroundColor #ECFDF5
+}
+
+skinparam package {
+    BackgroundColor #F8FAFC
+    BorderColor #94A3B8
+    FontColor #0F172A
+    FontStyle bold
+}
+
+title SmartStay Hotel Booking System - Complete UML Class Diagram\nModule: CI6115 Programming III (Kingston University London)
+
+' ========================================================
+' DOMAIN MODEL PACKAGE
+' ========================================================
+package "lk.smartstay.model" {
+
+    class 2635746_Room {
+        - roomId: String
+        - roomType: RoomType
+        - bedType: BedType
+        - capacity: int
+        - status: RoomStatus
+        --
+        + Room(roomId: String, roomType: RoomType, bedType: BedType, capacity: int)
+        + Room(roomId: String, roomType: RoomType, bedType: BedType, capacity: int, status: RoomStatus)
+        + getRoomId(): String
+        + getRoomType(): RoomType
+        + setRoomType(roomType: RoomType): void
+        + getBedType(): BedType
+        + setBedType(bedType: BedType): void
+        + getCapacity(): int
+        + setCapacity(capacity: int): void
+        + getStatus(): RoomStatus
+        + setStatus(status: RoomStatus): void
+        + updateStatus(newStatus: RoomStatus): void
+        + isAvailable(): boolean
+        + getDailyRate(): double
+        + getTaxRate(): double
+        + getExtraGuestCharge(): double
+        + hasComplimentaryBreakfast(): boolean
+        + equals(o: Object): boolean
+        + hashCode(): int
+        + toString(): String
+    }
+
+    class 2635746_Guest {
+        - guestId: String
+        - nicOrPassport: String
+        - fullName: String
+        - contactNumber: String
+        - email: String
+        --
+        + Guest(guestId: String, nicOrPassport: String, fullName: String, contactNumber: String, email: String)
+        + getGuestId(): String
+        + getNicOrPassport(): String
+        + setNicOrPassport(nicOrPassport: String): void
+        + getFullName(): String
+        + setFullName(fullName: String): void
+        + getContactNumber(): String
+        + setContactNumber(contactNumber: String): void
+        + getEmail(): String
+        + setEmail(email: String): void
+        + equals(o: Object): boolean
+        + hashCode(): int
+        + toString(): String
+    }
+
+    class 2635746_Reservation {
+        + {static} DEFAULT_BOOKING_ADVANCE: double = 10000.0
+        + {static} LONG_STAY_DISCOUNT_THRESHOLD_NIGHTS: int = 5
+        - bookingId: String
+        - guest: Guest
+        - room: Room
+        - numberOfGuests: int
+        - checkInDate: LocalDate
+        - checkOutDate: LocalDate
+        - bookingAdvance: double
+        - status: ReservationStatus
+        --
+        + Reservation(bookingId: String, guest: Guest, room: Room, numberOfGuests: int, checkInDate: LocalDate, checkOutDate: LocalDate)
+        + Reservation(bookingId: String, guest: Guest, room: Room, numberOfGuests: int, checkInDate: LocalDate, checkOutDate: LocalDate, bookingAdvance: double, status: ReservationStatus)
+        + calculateNumberOfNights(): long
+        + qualifiesForLongStayDiscount(): boolean
+        + isCancelled(): boolean
+        + getBookingId(): String
+        + getGuest(): Guest
+        + getRoom(): Room
+        + setRoom(room: Room): void
+        + getNumberOfGuests(): int
+        + setNumberOfGuests(numberOfGuests: int): void
+        + getCheckInDate(): LocalDate
+        + setCheckInDate(checkInDate: LocalDate): void
+        + getCheckOutDate(): LocalDate
+        + setCheckOutDate(checkOutDate: LocalDate): void
+        + getBookingAdvance(): double
+        + setBookingAdvance(bookingAdvance: double): void
+        + getStatus(): ReservationStatus
+        + setStatus(status: ReservationStatus): void
+        + equals(o: Object): boolean
+        + hashCode(): int
+        + toString(): String
+    }
+
+    class 2635746_Invoice {
+        - invoiceId: String
+        - reservation: Reservation
+        - baseRoomCharge: double
+        - extraGuestCharge: double
+        - discountAmount: double
+        - taxAmount: double
+        - bookingAdvanceDeduction: double
+        - finalPayableAmount: double
+        - unusedAdvanceCredit: double
+        --
+        + Invoice(invoiceId: String, reservation: Reservation, baseRoomCharge: double, extraGuestCharge: double, discountAmount: double, taxAmount: double, bookingAdvanceDeduction: double, finalPayableAmount: double)
+        + Invoice(invoiceId: String, reservation: Reservation, baseRoomCharge: double, extraGuestCharge: double, discountAmount: double, taxAmount: double, bookingAdvanceDeduction: double, finalPayableAmount: double, unusedAdvanceCredit: double)
+        + getInvoiceId(): String
+        + getReservation(): Reservation
+        + getBaseRoomCharge(): double
+        + getExtraGuestCharge(): double
+        + getDiscountAmount(): double
+        + getTaxAmount(): double
+        + getBookingAdvanceDeduction(): double
+        + getFinalPayableAmount(): double
+        + getUnusedAdvanceCredit(): double
+        + hasUnusedAdvanceCredit(): boolean
+        + getTaxableSubtotal(): double
+        + getBillTotal(): double
+        + equals(o: Object): boolean
+        + hashCode(): int
+        + toString(): String
+    }
+}
+
+' ========================================================
+' ENUMS PACKAGE
+' ========================================================
+package "lk.smartstay.enums" {
+
+    enum 2635746_RoomType {
+        STANDARD
+        DELUXE
+        SUITE
+        FAMILY_SUITE
+        --
+        - displayName: String
+        - dailyRate: double
+        - complimentaryBreakfast: boolean
+        - extraGuestCharge: double
+        - taxRate: double
+        --
+        ~ RoomType(displayName: String, dailyRate: double, complimentaryBreakfast: boolean, extraGuestCharge: double, taxRate: double)
+        + getDisplayName(): String
+        + getDailyRate(): double
+        + hasComplimentaryBreakfast(): boolean
+        + isComplimentaryBreakfast(): boolean
+        + getExtraGuestCharge(): double
+        + getTaxRate(): double
+        + toString(): String
+    }
+
+    enum 2635746_BedType {
+        SINGLE
+        DOUBLE
+        QUEEN
+        KING
+        --
+        - displayName: String
+        --
+        ~ BedType(displayName: String)
+        + getDisplayName(): String
+        + toString(): String
+    }
+
+    enum 2635746_RoomStatus {
+        AVAILABLE
+        RESERVED
+        UNDER_MAINTENANCE
+        --
+        - displayName: String
+        --
+        ~ RoomStatus(displayName: String)
+        + getDisplayName(): String
+        + toString(): String
+    }
+
+    enum 2635746_ReservationStatus {
+        CONFIRMED
+        CANCELLED
+        COMPLETED
+        --
+        - displayName: String
+        --
+        ~ ReservationStatus(displayName: String)
+        + getDisplayName(): String
+        + toString(): String
+    }
+}
+
+' ========================================================
+' REPOSITORY (DATA ACCESS) PACKAGE
+' ========================================================
+package "lk.smartstay.repository" {
+
+    class 2635746_RoomRepository {
+        - rooms: Map<String, Room>
+        --
+        + RoomRepository()
+        + addRoom(room: Room): boolean
+        + updateRoom(room: Room): boolean
+        + removeRoom(roomId: String): boolean
+        + findById(roomId: String): Room
+        + existsById(roomId: String): boolean
+        + findAll(): List<Room>
+        + count(): int
+    }
+
+    class 2635746_GuestRepository {
+        - guests: Map<String, Guest>
+        --
+        + GuestRepository()
+        + addGuest(guest: Guest): boolean
+        + updateGuest(guest: Guest): boolean
+        + findById(guestId: String): Guest
+        + findByNicOrPassport(nicOrPassport: String): Guest
+        + findByName(name: String): List<Guest>
+        + findAll(): List<Guest>
+        + count(): int
+    }
+
+    class 2635746_ReservationRepository {
+        - reservations: Map<String, Reservation>
+        --
+        + ReservationRepository()
+        + addReservation(reservation: Reservation): boolean
+        + updateReservation(reservation: Reservation): boolean
+        + removeReservation(bookingId: String): boolean
+        + findByBookingId(bookingId: String): Reservation
+        + findByGuestName(guestName: String): List<Reservation>
+        + findByCheckInDate(date: LocalDate): List<Reservation>
+        + findByRoomId(roomId: String): List<Reservation>
+        + findAll(): List<Reservation>
+        + count(): int
+    }
+
+    class 2635746_DatabaseManager {
+        - instance: DatabaseManager {static}
+        - dataDir: Path
+        - dbFile: Path
+        - sqlDumpFile: Path
+        - persistenceEnabled: boolean
+        --
+        + getInstance(): DatabaseManager {static}
+        + registerRepositories(roomRepo: RoomRepository, guestRepo: GuestRepository, resRepo: ReservationRepository): void
+        + initializeAndLoad(roomRepo: RoomRepository, guestRepo: GuestRepository, resRepo: ReservationRepository): void
+        + seedDefaultData(roomRepo: RoomRepository, guestRepo: GuestRepository, resRepo: ReservationRepository): void
+        + load(roomRepo: RoomRepository, guestRepo: GuestRepository, resRepo: ReservationRepository): void
+        + save(roomRepo: RoomRepository, guestRepo: GuestRepository, resRepo: ReservationRepository): void
+        + autoSave(): void
+        + exportSqlDump(roomRepo: RoomRepository, guestRepo: GuestRepository, resRepo: ReservationRepository): void
+    }
+}
+
+' ========================================================
+' BUSINESS SERVICE PACKAGE
+' ========================================================
+package "lk.smartstay.service" {
+
+    class 2635746_RoomService {
+        - roomRepository: RoomRepository
+        - reservationRepository: ReservationRepository
+        --
+        + RoomService(roomRepository: RoomRepository, reservationRepository: ReservationRepository)
+        + RoomService(roomRepository: RoomRepository)
+        + addRoom(room: Room): boolean
+        + updateRoom(room: Room): boolean
+        + removeRoom(roomId: String): boolean
+        + updateRoomStatus(roomId: String, status: RoomStatus): boolean
+        + findRoomById(roomId: String): Room
+        + getAllRooms(): List<Room>
+        + getRoomRepository(): RoomRepository
+        + getReservationRepository(): ReservationRepository
+    }
+
+    class 2635746_GuestService {
+        - {static} EMAIL_PATTERN: Pattern
+        - guestRepository: GuestRepository
+        --
+        + GuestService(guestRepository: GuestRepository)
+        + registerGuest(guest: Guest): boolean
+        + updateGuest(guest: Guest): boolean
+        + findGuestById(guestId: String): Guest
+        + findGuestByNicOrPassport(nicOrPassport: String): Guest
+        + searchGuestsByName(name: String): List<Guest>
+        + getAllGuests(): List<Guest>
+        + validateGuestData(guest: Guest): boolean
+        + getGuestRepository(): GuestRepository
+    }
+
+    class 2635746_ReservationService {
+        + {static} COLOMBO_ZONE: ZoneId
+        + {static} MINIMUM_ADVANCE_BOOKING_DAYS: int = 2
+        + {static} STANDARD_BOOKING_ADVANCE_LKR: double = 10000.0
+        + {static} CHECK_IN_TIME: LocalTime = 14:00
+        + {static} CANCELLATION_LOCK_HOURS: int = 24
+        - roomRepository: RoomRepository
+        - reservationRepository: ReservationRepository
+        - guestRepository: GuestRepository
+        - clock: Clock
+        --
+        + ReservationService(roomRepository: RoomRepository, reservationRepository: ReservationRepository, guestRepository: GuestRepository, clock: Clock)
+        + ReservationService(roomRepository: RoomRepository, reservationRepository: ReservationRepository, guestRepository: GuestRepository)
+        + ReservationService(roomRepository: RoomRepository, reservationRepository: ReservationRepository, clock: Clock)
+        + ReservationService(roomRepository: RoomRepository, reservationRepository: ReservationRepository)
+        + ReservationService()
+        + searchAvailableRooms(type: RoomType, checkIn: LocalDate, checkOut: LocalDate): List<Room>
+        + isRoomAvailableForDates(room: Room, checkIn: LocalDate, checkOut: LocalDate): boolean
+        + validateAdvanceBooking(checkIn: LocalDate): boolean
+        + createReservation(guest: Guest, room: Room, numberOfGuests: int, checkIn: LocalDate, checkOut: LocalDate): Reservation
+        + searchByBookingId(bookingId: String): Reservation
+        + searchByGuestName(guestName: String): List<Reservation>
+        + getReservationsByCheckInDate(date: LocalDate): List<Reservation>
+        + getAllReservations(): List<Reservation>
+        + hasReservationHistoryForRoom(roomId: String): boolean
+        + canCancel(reservation: Reservation): boolean
+        + getCancellationIneligibilityReason(reservation: Reservation): String
+        + cancelReservation(bookingId: String): boolean
+        + getRefundAmount(reservation: Reservation): double
+        - hasDateOverlap(reqIn: LocalDate, reqOut: LocalDate, existIn: LocalDate, existOut: LocalDate): boolean
+        + getRoomRepository(): RoomRepository
+        + getReservationRepository(): ReservationRepository
+        + getGuestRepository(): GuestRepository
+        + getClock(): Clock
+    }
+
+    class 2635746_InvoiceService {
+        + {static} LONG_STAY_DISCOUNT_PERCENT: double = 0.12
+        + {static} LONG_STAY_MINIMUM_NIGHTS: int = 5
+        - reservationRepository: ReservationRepository
+        - invoiceCache: Map<String, Invoice>
+        --
+        + InvoiceService(reservationRepository: ReservationRepository)
+        + InvoiceService()
+        + generateInvoice(reservation: Reservation): Invoice
+        + calculateBaseCharge(reservation: Reservation): BigDecimal
+        + calculateExtraGuestCharge(reservation: Reservation): BigDecimal
+        + calculateDiscount(reservation: Reservation): BigDecimal
+        + calculateTax(reservation: Reservation, taxableSubtotal: BigDecimal): BigDecimal
+        + generateInvoiceByBookingId(bookingId: String): Invoice
+        + getInvoiceByBookingId(bookingId: String): Invoice
+        + findInvoiceById(invoiceId: String): Invoice
+        + getAllInvoices(): List<Invoice>
+        + clearInvoices(): void
+        + getReservationRepository(): ReservationRepository
+    }
+}
+
+' ========================================================
+' PRESENTATION LAYER (SWING GUI) PACKAGE
+' ========================================================
+package "lk.smartstay.ui" {
+
+    class 2635746_MainFrame {
+        - cardLayout: CardLayout
+        - contentPanel: JPanel
+        - headerTitleLabel: JLabel
+        - navButtons: List<JButton>
+        - btnExit: JButton
+        - roomRepository: RoomRepository
+        - guestRepository: GuestRepository
+        - reservationRepository: ReservationRepository
+        - roomService: RoomService
+        - guestService: GuestService
+        - reservationService: ReservationService
+        - invoiceService: InvoiceService
+        - dashboardPanel: DashboardPanel
+        - roomManagementPanel: RoomManagementPanel
+        - guestRegistrationPanel: GuestRegistrationPanel
+        - roomSearchPanel: RoomSearchPanel
+        - reservationPanel: ReservationPanel
+        - invoicePanel: InvoicePanel
+        --
+        + MainFrame()
+        - initWindow(): void
+        - initComponents(): void
+        - createHeaderPanel(): JPanel
+        - createSidebarPanel(): JPanel
+        - createContentPanel(): JPanel
+        - createNavButton(title: String, cardName: String, icon: String): JButton
+        - navigateTo(cardName: String, headerTitle: String): void
+        - updateActiveButton(activeBtn: JButton): void
+    }
+
+    class 2635746_DashboardPanel {
+        - roomRepository: RoomRepository
+        - guestRepository: GuestRepository
+        - reservationRepository: ReservationRepository
+        - lblTotalRoomsVal: JLabel
+        - lblAvailableRoomsVal: JLabel
+        - lblGuestsVal: JLabel
+        - lblReservationsVal: JLabel
+        --
+        + DashboardPanel(roomRepo: RoomRepository, guestRepo: GuestRepository, resRepo: ReservationRepository)
+        + refreshMetrics(): void
+        - initComponents(): void
+    }
+}
+
+package "lk.smartstay.ui.admin" {
+
+    class 2635746_RoomManagementPanel {
+        - roomService: RoomService
+        - txtRoomId: JTextField
+        - cmbRoomType: JComboBox<RoomType>
+        - cmbBedType: JComboBox<BedType>
+        - spnCapacity: JSpinner
+        - cmbStatus: JComboBox<RoomStatus>
+        - tblRooms: JTable
+        - tableModel: DefaultTableModel
+        --
+        + RoomManagementPanel(roomService: RoomService)
+        + refreshTable(): void
+        + performAddRoom(): boolean
+        + performUpdateRoom(): boolean
+        + performDeleteRoom(): boolean
+        + clearForm(): void
+    }
+}
+
+package "lk.smartstay.ui.guest" {
+
+    class 2635746_GuestRegistrationPanel {
+        - guestService: GuestService
+        - txtGuestId: JTextField
+        - txtNic: JTextField
+        - txtFullName: JTextField
+        - txtContact: JTextField
+        - txtEmail: JTextField
+        - tblGuests: JTable
+        - tableModel: DefaultTableModel
+        --
+        + GuestRegistrationPanel(guestService: GuestService)
+        + refreshTable(): void
+        + performRegisterGuest(): boolean
+        + performUpdateGuest(): boolean
+        + clearForm(): void
+    }
+
+    class 2635746_RoomSearchPanel {
+        - reservationService: ReservationService
+        - cmbRoomType: JComboBox<RoomType>
+        - txtCheckIn: JTextField
+        - txtCheckOut: JTextField
+        - tblResults: JTable
+        - tableModel: DefaultTableModel
+        --
+        + RoomSearchPanel(reservationService: ReservationService)
+        + performSearch(): void
+        + clearSearch(): void
+    }
+
+    class 2635746_ReservationPanel {
+        - reservationService: ReservationService
+        - guestService: GuestService
+        - cmbGuests: JComboBox<Guest>
+        - cmbRooms: JComboBox<Room>
+        - spnGuests: JSpinner
+        - txtCheckIn: JTextField
+        - txtCheckOut: JTextField
+        - tblReservations: JTable
+        - tableModel: DefaultTableModel
+        --
+        + ReservationPanel(resService: ReservationService, guestService: GuestService)
+        + populateGuestDropdown(): void
+        + populateAvailableRooms(): void
+        + performCreateReservation(): boolean
+        + performCancelReservation(): boolean
+        + refreshReservationsTable(): void
+    }
+
+    class 2635746_InvoicePanel {
+        - invoiceService: InvoiceService
+        - reservationService: ReservationService
+        - txtBookingSearch: JTextField
+        - cmbConfirmedBookings: JComboBox<String>
+        - editorInvoicePreview: JEditorPane
+        - currentInvoice: Invoice
+        --
+        + InvoicePanel(invoiceService: InvoiceService, reservationService: ReservationService)
+        + refreshBookingList(): void
+        + performGenerateInvoice(): boolean
+        + performPrintInvoice(): void
+    }
+}
+
+' ========================================================
+' UTILITIES & APPLICATION LAUNCHER
+' ========================================================
+package "lk.smartstay.util" {
+
+    class 2635746_IdGenerator {
+        - {static} guestCounter: AtomicInteger
+        - {static} bookingCounter: AtomicInteger
+        - {static} invoiceCounter: AtomicInteger
+        --
+        - IdGenerator()
+        + {static} generateGuestId(): String
+        + {static} peekNextGuestId(): String
+        + {static} generateBookingId(): String
+        + {static} generateInvoiceId(): String
+        + {static} reset(): void
+    }
+
+    class 2635746_UIConstants {
+        + {static} COLOR_PRIMARY: Color
+        + {static} COLOR_PRIMARY_HOVER: Color
+        + {static} COLOR_SIDEBAR_BG: Color
+        + {static} COLOR_SIDEBAR_ACTIVE: Color
+        + {static} COLOR_SIDEBAR_HOVER: Color
+        + {static} COLOR_BACKGROUND: Color
+        + {static} COLOR_CARD_BG: Color
+        + {static} COLOR_CARD_BORDER: Color
+        + {static} COLOR_TEXT_PRIMARY: Color
+        + {static} COLOR_TEXT_MUTED: Color
+        + {static} COLOR_TEXT_LIGHT: Color
+        + {static} FONT_FAMILY: String
+        + {static} WINDOW_SIZE: Dimension
+        + {static} SIDEBAR_SIZE: Dimension
+        --
+        - UIConstants()
+    }
+}
+
+package "lk.smartstay" {
+
+    class 2635746_Main {
+        --
+        + {static} main(args: String[]): void
+    }
+}
+
+' ========================================================
+' RELATIONSHIPS AND MULTIPLICITIES
+' ========================================================
+
+' Domain Model internal associations and compositions
+2635746_Room "1" *--> "1" 2635746_RoomType : categorized by >
+2635746_Room "1" *--> "1" 2635746_BedType : configured with >
+2635746_Room "1" *--> "1" 2635746_RoomStatus : operational state >
+
+2635746_Reservation "1" *--> "1" 2635746_ReservationStatus : current status >
+2635746_Reservation "0..*" --> "1" 2635746_Guest : booked by >
+2635746_Reservation "0..*" --> "1" 2635746_Room : reserves >
+
+2635746_Invoice "0..1" --> "1" 2635746_Reservation : itemizes & bills >
+
+' Repository Aggregations
+2635746_RoomRepository o-- "0..*" 2635746_Room : stores in-memory >
+2635746_GuestRepository o-- "0..*" 2635746_Guest : stores in-memory >
+2635746_ReservationRepository o-- "0..*" 2635746_Reservation : stores in-memory >
+
+' Service to Repository Dependencies
+2635746_RoomService --> "1" 2635746_RoomRepository : delegates persistence >
+2635746_RoomService ..> "0..1" 2635746_ReservationRepository : checks deletion safeguard >
+
+2635746_GuestService --> "1" 2635746_GuestRepository : delegates persistence >
+
+2635746_ReservationService --> "1" 2635746_RoomRepository : verifies room state >
+2635746_ReservationService --> "1" 2635746_ReservationRepository : queries & stores bookings >
+2635746_ReservationService ..> "0..1" 2635746_GuestRepository : verifies guest identity >
+2635746_ReservationService ..> 2635746_IdGenerator : uses for ID generation >
+
+2635746_InvoiceService --> "1" 2635746_ReservationRepository : looks up bookings >
+2635746_InvoiceService o-- "0..*" 2635746_Invoice : caches invoices >
+
+' MainFrame Composition of UI Panels & Wiring of Services
+2635746_MainFrame *-- "1" 2635746_DashboardPanel
+2635746_MainFrame *-- "1" 2635746_RoomManagementPanel
+2635746_MainFrame *-- "1" 2635746_GuestRegistrationPanel
+2635746_MainFrame *-- "1" 2635746_RoomSearchPanel
+2635746_MainFrame *-- "1" 2635746_ReservationPanel
+2635746_MainFrame *-- "1" 2635746_InvoicePanel
+
+2635746_MainFrame --> "1" 2635746_RoomService
+2635746_MainFrame --> "1" 2635746_GuestService
+2635746_MainFrame --> "1" 2635746_ReservationService
+2635746_MainFrame --> "1" 2635746_InvoiceService
+
+' Panel to Service Dependencies
+2635746_RoomManagementPanel --> "1" 2635746_RoomService
+2635746_GuestRegistrationPanel --> "1" 2635746_GuestService
+2635746_RoomSearchPanel --> "1" 2635746_ReservationService
+2635746_ReservationPanel --> "1" 2635746_ReservationService
+2635746_ReservationPanel ..> "1" 2635746_GuestService
+2635746_InvoicePanel --> "1" 2635746_InvoiceService
+2635746_InvoicePanel ..> "1" 2635746_ReservationService
+
+' Main Bootstrap
+2635746_Main ..> 2635746_MainFrame : instantiates & launches >
+2635746_Main ..> 2635746_DatabaseManager : initializes persistence >
+2635746_DatabaseManager ..> 2635746_RoomRepository : synchronizes >
+2635746_DatabaseManager ..> 2635746_GuestRepository : synchronizes >
+2635746_DatabaseManager ..> 2635746_ReservationRepository : synchronizes >
+2635746_HotelBookingManager ..> 2635746_DatabaseManager : initializes & saves >
+
+@enduml

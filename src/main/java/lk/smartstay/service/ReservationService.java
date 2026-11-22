@@ -6,6 +6,7 @@ import lk.smartstay.enums.RoomType;
 import lk.smartstay.model.Guest;
 import lk.smartstay.model.Reservation;
 import lk.smartstay.model.Room;
+import lk.smartstay.repository.DatabaseManager;
 import lk.smartstay.repository.GuestRepository;
 import lk.smartstay.repository.ReservationRepository;
 import lk.smartstay.repository.RoomRepository;
@@ -211,6 +212,7 @@ public class ReservationService {
                     "Failed to save reservation record: Booking ID '" + bookingId + "' already exists.");
         }
 
+        DatabaseManager.getInstance().autoSave();
         return reservation;
     }
 
@@ -334,7 +336,11 @@ public class ReservationService {
         }
 
         reservation.setStatus(ReservationStatus.CANCELLED);
-        return reservationRepository.updateReservation(reservation);
+        boolean ok = reservationRepository.updateReservation(reservation);
+        if (ok) {
+            DatabaseManager.getInstance().autoSave();
+        }
+        return ok;
     }
 
     public double getRefundAmount(Reservation reservation) {

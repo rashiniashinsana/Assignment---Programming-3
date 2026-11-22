@@ -1,5 +1,6 @@
 package lk.smartstay.ui;
 
+import lk.smartstay.repository.DatabaseManager;
 import lk.smartstay.repository.GuestRepository;
 import lk.smartstay.repository.ReservationRepository;
 import lk.smartstay.repository.RoomRepository;
@@ -28,6 +29,7 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,13 +64,22 @@ public class MainFrame extends JFrame {
     private InvoicePanel invoicePanel;
 
     public MainFrame() {
-        this.roomRepository = new RoomRepository();
-        this.guestRepository = new GuestRepository();
-        this.reservationRepository = new ReservationRepository();
-        this.roomService = new RoomService(roomRepository, reservationRepository);
-        this.guestService = new GuestService(guestRepository);
-        this.reservationService = new ReservationService(roomRepository, reservationRepository, guestRepository);
-        this.invoiceService = new InvoiceService(reservationRepository);
+        this(new RoomRepository(), new GuestRepository(), new ReservationRepository());
+    }
+
+    public MainFrame(RoomRepository roomRepository, GuestRepository guestRepository,
+            ReservationRepository reservationRepository) {
+        this.roomRepository = roomRepository != null ? roomRepository : new RoomRepository();
+        this.guestRepository = guestRepository != null ? guestRepository : new GuestRepository();
+        this.reservationRepository = reservationRepository != null ? reservationRepository
+                : new ReservationRepository();
+        DatabaseManager.getInstance().registerRepositories(this.roomRepository, this.guestRepository,
+                this.reservationRepository);
+        this.roomService = new RoomService(this.roomRepository, this.reservationRepository);
+        this.guestService = new GuestService(this.guestRepository);
+        this.reservationService = new ReservationService(this.roomRepository, this.reservationRepository,
+                this.guestRepository);
+        this.invoiceService = new InvoiceService(this.reservationRepository);
         initWindow();
         initComponents();
     }
@@ -107,14 +118,27 @@ public class MainFrame extends JFrame {
 
         headerTitleLabel = new JLabel("Dashboard Overview");
         headerTitleLabel.setFont(UIConstants.FONT_SECTION_TITLE);
-        headerTitleLabel.setForeground(UIConstants.COLOR_TEXT_PRIMARY);
+        headerTitleLabel.setForeground(UIConstants.COLOR_PRIMARY);
 
-        JLabel rightTagLabel = new JLabel("CI6115 Programming III | In-Memory Mode");
-        rightTagLabel.setFont(UIConstants.FONT_MUTED);
-        rightTagLabel.setForeground(UIConstants.COLOR_TEXT_MUTED);
+        JPanel rightBadgePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 14));
+        rightBadgePanel.setOpaque(false);
+
+        JLabel locationBadge = new JLabel("Colombo, Sri Lanka");
+        locationBadge.setFont(UIConstants.FONT_BADGE);
+        locationBadge.setForeground(UIConstants.COLOR_TEXT_MUTED);
+
+        JLabel statusBadge = new JLabel(" Live System Online ");
+        statusBadge.setFont(UIConstants.FONT_BADGE);
+        statusBadge.setForeground(UIConstants.COLOR_SUCCESS_TEXT);
+        statusBadge.setBackground(UIConstants.COLOR_SUCCESS_BG);
+        statusBadge.setOpaque(true);
+        statusBadge.setBorder(BorderFactory.createEmptyBorder(3, 8, 3, 8));
+
+        rightBadgePanel.add(locationBadge);
+        rightBadgePanel.add(statusBadge);
 
         header.add(headerTitleLabel, BorderLayout.WEST);
-        header.add(rightTagLabel, BorderLayout.EAST);
+        header.add(rightBadgePanel, BorderLayout.EAST);
 
         return header;
     }
@@ -129,19 +153,25 @@ public class MainFrame extends JFrame {
         JPanel brandPanel = new JPanel();
         brandPanel.setLayout(new BoxLayout(brandPanel, BoxLayout.Y_AXIS));
         brandPanel.setOpaque(false);
-        brandPanel.setBorder(BorderFactory.createEmptyBorder(4, 8, 20, 8));
+        brandPanel.setBorder(BorderFactory.createEmptyBorder(4, 8, 22, 8));
 
         JLabel brandTitle = new JLabel("SmartStay");
         brandTitle.setFont(UIConstants.FONT_APP_TITLE);
-        brandTitle.setForeground(UIConstants.COLOR_TEXT_LIGHT);
+        brandTitle.setForeground(Color.WHITE);
 
-        JLabel brandSubtitle = new JLabel("HOTEL BOOKING SYSTEM");
-        brandSubtitle.setFont(UIConstants.FONT_MUTED);
-        brandSubtitle.setForeground(UIConstants.COLOR_TEXT_MUTED);
+        JLabel brandSubtitle = new JLabel("★ LUXURY HOTEL & SUITES ★");
+        brandSubtitle.setFont(UIConstants.FONT_BADGE);
+        brandSubtitle.setForeground(UIConstants.COLOR_ACCENT_GOLD);
+
+        JLabel brandTag = new JLabel("Hotel Administration Console");
+        brandTag.setFont(UIConstants.FONT_MUTED);
+        brandTag.setForeground(new Color(148, 163, 184));
 
         brandPanel.add(brandTitle);
-        brandPanel.add(Box.createVerticalStrut(3));
+        brandPanel.add(Box.createVerticalStrut(4));
         brandPanel.add(brandSubtitle);
+        brandPanel.add(Box.createVerticalStrut(2));
+        brandPanel.add(brandTag);
 
         sidebar.add(brandPanel, BorderLayout.NORTH);
 
@@ -194,7 +224,7 @@ public class MainFrame extends JFrame {
     private JButton createNavButton(String text, String cardName, String headerTitle) {
         JButton button = new JButton(text);
         button.setFont(UIConstants.FONT_NAV_BUTTON);
-        button.setForeground(UIConstants.COLOR_TEXT_LIGHT);
+        button.setForeground(new Color(148, 163, 184));
         button.setBackground(UIConstants.COLOR_SIDEBAR_BG);
         button.setFocusPainted(false);
         button.setBorderPainted(false);
@@ -209,6 +239,24 @@ public class MainFrame extends JFrame {
             updateActiveButton(button);
         });
 
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                if (button.getBackground() != UIConstants.COLOR_SIDEBAR_ACTIVE) {
+                    button.setBackground(UIConstants.COLOR_SIDEBAR_HOVER);
+                    button.setForeground(Color.WHITE);
+                }
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                if (button.getBackground() != UIConstants.COLOR_SIDEBAR_ACTIVE) {
+                    button.setBackground(UIConstants.COLOR_SIDEBAR_BG);
+                    button.setForeground(new Color(148, 163, 184));
+                }
+            }
+        });
+
         navButtons.add(button);
         return button;
     }
@@ -216,7 +264,7 @@ public class MainFrame extends JFrame {
     private JButton createNavButtonWithAction(String text, Runnable action) {
         JButton button = new JButton(text);
         button.setFont(UIConstants.FONT_NAV_BUTTON);
-        button.setForeground(UIConstants.COLOR_TEXT_LIGHT);
+        button.setForeground(new Color(148, 163, 184));
         button.setBackground(UIConstants.COLOR_SIDEBAR_BG);
         button.setFocusPainted(false);
         button.setBorderPainted(false);
@@ -231,6 +279,24 @@ public class MainFrame extends JFrame {
             updateActiveButton(button);
         });
 
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                if (button.getBackground() != UIConstants.COLOR_SIDEBAR_ACTIVE) {
+                    button.setBackground(UIConstants.COLOR_SIDEBAR_HOVER);
+                    button.setForeground(Color.WHITE);
+                }
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                if (button.getBackground() != UIConstants.COLOR_SIDEBAR_ACTIVE) {
+                    button.setBackground(UIConstants.COLOR_SIDEBAR_BG);
+                    button.setForeground(new Color(148, 163, 184));
+                }
+            }
+        });
+
         navButtons.add(button);
         return button;
     }
@@ -238,7 +304,7 @@ public class MainFrame extends JFrame {
     private JButton createExitButton() {
         btnExit = new JButton("Exit");
         btnExit.setFont(UIConstants.FONT_NAV_BUTTON);
-        btnExit.setForeground(UIConstants.COLOR_TEXT_LIGHT);
+        btnExit.setForeground(new Color(248, 113, 113));
         btnExit.setBackground(UIConstants.COLOR_SIDEBAR_BG);
         btnExit.setFocusPainted(false);
         btnExit.setBorderPainted(false);
@@ -249,6 +315,21 @@ public class MainFrame extends JFrame {
         btnExit.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
 
         btnExit.addActionListener(e -> handleExit());
+
+        btnExit.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                btnExit.setBackground(new Color(69, 10, 10));
+                btnExit.setForeground(new Color(254, 202, 202));
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                btnExit.setBackground(UIConstants.COLOR_SIDEBAR_BG);
+                btnExit.setForeground(new Color(248, 113, 113));
+            }
+        });
+
         navButtons.add(btnExit);
         return btnExit;
     }
@@ -301,12 +382,12 @@ public class MainFrame extends JFrame {
                 btn.setBackground(UIConstants.COLOR_SIDEBAR_ACTIVE);
                 btn.setForeground(Color.WHITE);
                 btn.setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createMatteBorder(0, 4, 0, 0, UIConstants.COLOR_PRIMARY_HOVER),
+                        BorderFactory.createMatteBorder(0, 4, 0, 0, UIConstants.COLOR_ACCENT_GOLD),
                         BorderFactory.createEmptyBorder(10, 12, 10, 16)
                 ));
             } else {
                 btn.setBackground(UIConstants.COLOR_SIDEBAR_BG);
-                btn.setForeground(UIConstants.COLOR_TEXT_LIGHT);
+                btn.setForeground(new Color(148, 163, 184));
                 btn.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
             }
         }
